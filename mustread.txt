@@ -1,0 +1,12 @@
+Admin username : admin
+Admin password:   admin123
+
+customer user name : BS
+customer password :   1234
+
+
+for admin login type,,,, localhost/..../admin/login.php
+for customer type ,,,,,,   localhost/..../customer/login.php
+
+
+to import database,,,,, import it from database/crm_db.sql
