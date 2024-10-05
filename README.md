@@ -26,5 +26,5 @@ To get started with the CRM system, clone this repository and install the necess
 
 ```bash
 git clone https://github.com/yourusername/crm-system.git
-cd crm-system
-npm install
+cd crm
+
