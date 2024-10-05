@@ -100,7 +100,7 @@
                     </li>
                     <li class="nav-item dropdown">
                       <a href="../admin/todo_calender/calender.html" class="nav-link nav-customer_list">
-                        <i class="nav-icon fas fa-user-friends"></i>
+                        <i class="nav-icon fas fa-calendar-alt"></i>
                         <p>
                           Todo Calender
                         </p>
