@@ -64,7 +64,7 @@
                       </a>
                     </li>
                     <li class="nav-item dropdown">
-                      <a href="../admin/todo_calender/calender.html" class="nav-link nav-customer_list">
+                      <a href="<?php echo base_url ?>admin/?page=services&view=todocalender" class="nav-link nav-customer_list">
                         <i class="nav-icon fas fa-calendar-alt"></i>
                         <p>
                           Todo Calender

@@ -7,6 +7,9 @@ switch ($view) {
 	case 'services':
 		include(base_app.'admin/services/service_list.php');
 		break;
+	case 'todocalender':
+		include(base_app.'admin/todo_calender/calender.html');
+		break;
 	default:
 		include(base_app.'admin/services/service_list.php');
 		break;
