@@ -63,7 +63,14 @@
                         </p>
                       </a>
                     </li>
-
+                    <li class="nav-item dropdown">
+                      <a href="../admin/todo_calender/calender.html" class="nav-link nav-customer_list">
+                        <i class="nav-icon fas fa-calendar-alt"></i>
+                        <p>
+                          Todo Calender
+                        </p>
+                      </a>
+                    </li>
                     <li class="nav-header">Ticket</li>
                     <li class="nav-item dropdown">
                       <a href="<?php echo base_url ?>admin/?page=ticket&view=create_ticket" class="nav-link nav-create_ticket">
@@ -98,14 +105,7 @@
                         </p>
                       </a>
                     </li>
-                    <li class="nav-item dropdown">
-                      <a href="../admin/todo_calender/calender.html" class="nav-link nav-customer_list">
-                        <i class="nav-icon fas fa-calendar-alt"></i>
-                        <p>
-                          Todo Calender
-                        </p>
-                      </a>
-                    </li>
+                    
                   </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
