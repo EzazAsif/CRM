@@ -98,7 +98,14 @@
                         </p>
                       </a>
                     </li>
-                   
+                    <li class="nav-item dropdown">
+                      <a href="./todo_calender/calender.html" class="nav-link nav-customer_list">
+                        <i class="nav-icon fas fa-user-friends"></i>
+                        <p>
+                          Todo Calender
+                        </p>
+                      </a>
+                    </li>
                   </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
