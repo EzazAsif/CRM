@@ -1,3 +1,36 @@
+/**
+ * This file is the main entry point for the customer section of the CRM application.
+ * 
+ * 
+ * It includes the necessary configuration and layout files, and dynamically loads
+ * the content based on the 'page' query parameter.
+ * 
+ * Included Files:
+ * - ../config.php: Configuration settings.
+ * - inc/header.php: Header section of the layout.
+ * - inc/topBarNav.php: Top navigation bar.
+ * - inc/navigation.php: Sidebar navigation.
+ * - inc/footer.php: Footer section of the layout.
+ * 
+ * Functionality:
+ * - Checks for a 'page' query parameter to determine which content to load.
+ * - Displays a success message if available in the session flash data.
+ * - Includes the appropriate content file or displays a 404 error if the file or directory does not exist.
+ * - Contains modal dialogs for confirmation, universal modal, right-side modal, and viewer modal.
+ * 
+ * HTML Structure:
+ * - Wrapper div containing the main layout.
+ * - Content wrapper div for the main content area.
+ * - Section for the main content.
+ * - Modal dialogs for various interactions.
+ * 
+ * Data Attributes:
+ * - data-new-gr-c-s-check-loaded: Used for Grammarly extension.
+ * - data-gr-ext-installed: Used for Grammarly extension.
+ * 
+ * Styles:
+ * - Various classes and inline styles for layout and appearance.
+ */
 <?php require_once('../config.php'); ?>
  <!DOCTYPE html>
 <html lang="en" class="" style="height: auto;">
@@ -15,7 +48,7 @@
         <!-- /.content-header -->
         <!-- Main content -->
         <section class="content">
-          <?php if($_settings->chk_flashdata('success')): ?>
+          <?php if(isset($_settings) && $_settings->chk_flashdata('success')): ?>
           <script>
             alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
           </script>
