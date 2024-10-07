@@ -1,3 +1,45 @@
+/* 
+
+  Description:
+  This CSS file styles a calendar and event management interface. It includes styles for the main container, 
+  calendar, days, events, and various interactive elements. The design is responsive and adapts to different 
+  screen sizes using media queries.
+
+  Variables:
+  --primary-clr: The primary color used throughout the stylesheet.
+
+  Global Styles:
+  - Resets margin and padding for all elements.
+  - Sets a default font family.
+  - Customizes the appearance of the scrollbar.
+
+  Body:
+  - Centers content vertically and horizontally.
+  - Sets a background color and padding.
+
+  Container:
+  - Defines the main layout with a left and right section.
+  - Sets dimensions, padding, and background color.
+
+  Calendar:
+  - Styles the calendar layout, including month, weekdays, and days.
+  - Adds hover effects and active states for days.
+  - Includes styles for events and special days (e.g., today, active).
+
+  Right Section:
+  - Styles the section displaying today's date and events.
+  - Adds hover effects for events and a button to add new events.
+
+  Add Event:
+  - Styles the form for adding new events.
+  - Includes transitions for showing/hiding the form.
+
+  Media Queries:
+  - Adjusts layout and styles for screens smaller than 1000px and 500px.
+
+  Credits:
+  - Styles the credits section at the bottom of the page.
+*/
 :root {
     --primary-clr: #b38add;
   }

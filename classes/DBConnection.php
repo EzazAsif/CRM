@@ -1,3 +1,20 @@
+/**
+ * Class DBConnection
+ * 
+ * This class establishes a connection to the database using MySQLi.
+ * It initializes the connection in the constructor and closes it in the destructor.
+ * 
+ * @package CRM\classes
+ * 
+ * @property string $host The database server host.
+ * @property string $username The database username.
+ * @property string $password The database password.
+ * @property string $database The database name.
+ * @property mysqli $conn The MySQLi connection object.
+ * 
+ * @method __construct() Initializes the database connection.
+ * @method __destruct() Closes the database connection.
+ */
 <?php
 if(!defined('DB_SERVER')){
     require_once("../initialize.php");

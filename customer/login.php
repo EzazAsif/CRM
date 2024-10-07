@@ -1,3 +1,35 @@
+/**
+ * This file is the login page for the CRM application.
+ * 
+ * 
+ * It includes the following functionalities:
+ * - Displays a login form for users to sign in.
+ * - Provides a link for user registration.
+ * - Uses Bootstrap for styling and layout.
+ * - Uses jQuery for handling form submission and modal dialogs.
+ * - Includes a modal dialog for user registration.
+ * 
+ * Included Files:
+ * - ../config.php: Configuration file.
+ * - inc/header.php: Header file.
+ * 
+ * JavaScript Functions:
+ * - start_loader(): Starts the loading animation.
+ * - end_loader(): Ends the loading animation.
+ * - uni_modal(title, url, size): Displays a modal dialog with the specified title, URL, and size.
+ * - _conf(msg, func, params): Displays a confirmation modal with the specified message, function, and parameters.
+ * 
+ * HTML Structure:
+ * - A login box containing the login form.
+ * - A modal dialog for user registration.
+ * 
+ * External Scripts:
+ * - jQuery
+ * - Bootstrap 4
+ * - AdminLTE
+ * 
+ * Note: Some parts of the code are commented out and not currently in use.
+ */
 <?php require_once('../config.php') ?>
 <!DOCTYPE html>
 <html lang="en" class="" style="height: auto;">

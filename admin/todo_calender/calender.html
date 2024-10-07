@@ -1,3 +1,19 @@
+<!-- 
+
+This script dynamically modifies the content of a webpage upon window load. It performs the following actions:
+
+1. Clears the existing content of the first element with the class 'container-fluid'.
+2. Injects an external Font Awesome stylesheet for icons.
+3. Injects a custom stylesheet for additional styles.
+4. Injects HTML content to create a calendar interface with navigation, weekdays, and event management sections.
+5. Dynamically loads an external JavaScript file for additional functionality.
+
+The injected HTML structure includes:
+- A calendar with month navigation, weekdays, and days.
+- A section for today's date and events.
+- An interface to add new events with input fields for event name and time.
+- A button to trigger the event addition interface.
+-->
 <script>
     window.onload = function () {
         // Get the first element with the class 'content' (adjust this to match your actual structure)

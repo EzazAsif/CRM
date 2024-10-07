@@ -1,3 +1,35 @@
+/**
+ * This script is responsible for displaying and managing quote requests in the CRM admin panel.
+ * 
+ * The main functionalities include:
+ * - Displaying a list of quote requests in a table format.
+ * - Loading quote request data from the server via AJAX.
+ * - Handling actions such as deleting a quote request.
+ * 
+ * The script uses jQuery and DataTables for dynamic table management and AJAX requests.
+ * 
+ * Key Components:
+ * - HTML structure for displaying the quote requests.
+ * - JavaScript functions for loading data, handling actions, and managing the DataTable.
+ * 
+ * JavaScript Functions:
+ * - load_data(): Fetches quote request data from the server and populates the table.
+ * - data_func(): Attaches event handlers for edit and delete actions.
+ * - delete_data($id): Sends a request to delete a specific quote request.
+ * 
+ * Event Listeners:
+ * - Document ready: Initializes the data loading process.
+ * - #new_data click: Opens a modal to create a new service category.
+ * 
+ * AJAX Endpoints:
+ * - classes/Master.php?f=load_quote: Endpoint to load quote request data.
+ * - classes/Master.php?f=delete_quote: Endpoint to delete a quote request.
+ * 
+ * Dependencies:
+ * - jQuery
+ * - DataTables
+ * - Bootstrap (for modal and dropdown components)
+ */
 <br>
 <h5 class="">Request</h5>
 <hr>
