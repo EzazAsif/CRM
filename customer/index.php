@@ -1,4 +1,4 @@
-/**
+<?php /**
  * This file is the main entry point for the customer section of the CRM application.
  * 
  * 
@@ -31,6 +31,7 @@
  * Styles:
  * - Various classes and inline styles for layout and appearance.
  */
+ ?>
 <?php require_once('../config.php'); ?>
  <!DOCTYPE html>
 <html lang="en" class="" style="height: auto;">

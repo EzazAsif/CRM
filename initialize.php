@@ -1,4 +1,7 @@
-/**
+
+<?php
+/*
+<--
  * 
  * This script initializes the development environment for the web application.
  * It sets up various constants and configuration settings required for testing and development.
@@ -22,8 +25,8 @@
  * - DB_USERNAME: Database username
  * - DB_PASSWORD: Database password
  * - DB_NAME: Database name
- */
-<?php
+ 
+*/
 // Development environment for the web application, for testing and development
 $dev_data = array(
 	'id' => '-1',

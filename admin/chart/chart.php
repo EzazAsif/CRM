@@ -1,3 +1,4 @@
+<?php?
 /**
  * 
  * This file contains the HTML and JavaScript code to render various charts for analytics and reporting
@@ -27,6 +28,8 @@
  * - Popper.js (https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js)
  * - Bootstrap JS (https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js)
  */
+
+>
 <div class="container mt-5">
     <h2 class="text-center">Analytics and Reporting</h2>
     <div class="row mt-4">

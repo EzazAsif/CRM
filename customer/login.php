@@ -1,3 +1,4 @@
+<?php
 /**
  * This file is the login page for the CRM application.
  * 
@@ -30,6 +31,7 @@
  * 
  * Note: Some parts of the code are commented out and not currently in use.
  */
+?>
 <?php require_once('../config.php') ?>
 <!DOCTYPE html>
 <html lang="en" class="" style="height: auto;">

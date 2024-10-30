@@ -1,3 +1,5 @@
+
+<?php
 /**
  * Class DBConnection
  * 
@@ -15,7 +17,6 @@
  * @method __construct() Initializes the database connection.
  * @method __destruct() Closes the database connection.
  */
-<?php
 if(!defined('DB_SERVER')){
     require_once("../initialize.php");
 }

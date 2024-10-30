@@ -1,3 +1,4 @@
+<?php?
 /**
  * This script is responsible for displaying and managing quote requests in the CRM admin panel.
  * 
@@ -30,6 +31,7 @@
  * - DataTables
  * - Bootstrap (for modal and dropdown components)
  */
+>
 <br>
 <h5 class="">Request</h5>
 <hr>
