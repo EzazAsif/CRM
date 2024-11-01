@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2021 at 07:28 PM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.2.28
+-- Generation Time: Nov 01, 2024 at 02:21 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -38,14 +37,32 @@ CREATE TABLE `customers` (
   `last_login` datetime DEFAULT NULL,
   `date_added` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `customers`
 --
 
 INSERT INTO `customers` (`id`, `firstname`, `lastname`, `username`, `password`, `avatar`, `last_login`, `date_added`, `date_updated`) VALUES
-(1, 'John', 'Smith', 'jsmith@sample.com', '39ce7e2a8573b41ce73b5ba41617f8f7', NULL, NULL, '2021-05-10 23:23:35', NULL);
+(1, 'John', 'Smith', 'jsmith@sample.com', '39ce7e2a8573b41ce73b5ba41617f8f7', NULL, NULL, '2021-05-10 23:23:35', NULL),
+(2, 'eZAZ', 'aSIF', 'Ezaz Asif', '57e290959274e7fc2f2b3a46ed35b50b', NULL, NULL, '2024-10-04 00:17:59', NULL),
+(3, 'Ezaz', 'Rafid', 'EzazAsif', '9c72446df124ddf214b698c1e2312371', NULL, NULL, '2024-10-04 14:57:23', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events`
+--
+
+CREATE TABLE `events` (
+  `id` int(11) NOT NULL,
+  `Userid` int(50) DEFAULT NULL,
+  `event_date` date NOT NULL,
+  `event_time_from` time NOT NULL,
+  `event_time_to` time NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -58,14 +75,15 @@ CREATE TABLE `quote` (
   `email` varchar(250) NOT NULL,
   `service_ids` text DEFAULT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `quote`
 --
 
 INSERT INTO `quote` (`id`, `email`, `service_ids`, `date_created`) VALUES
-(1, 'jsmith@sample.com', '3,4,2', '2021-05-11 01:08:50');
+(1, 'jsmith@sample.com', '3,4,2', '2021-05-11 01:08:50'),
+(3, 'asifrafid8399@gmail.com', '3', '2024-10-30 15:09:59');
 
 -- --------------------------------------------------------
 
@@ -79,7 +97,7 @@ CREATE TABLE `services` (
   `service` text DEFAULT NULL,
   `description` text DEFAULT NULL,
   `img_path` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `services`
@@ -100,7 +118,7 @@ CREATE TABLE `services_category` (
   `id` int(30) NOT NULL,
   `category` text DEFAULT NULL,
   `description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `services_category`
@@ -120,14 +138,14 @@ CREATE TABLE `system_info` (
   `id` int(30) NOT NULL,
   `meta_field` text NOT NULL,
   `meta_value` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `system_info`
 --
 
 INSERT INTO `system_info` (`id`, `meta_field`, `meta_value`) VALUES
-(1, 'name', 'Customer Relationship Management System'),
+(1, 'name', 'Innovative Collection'),
 (4, 'intro', 'Hi! I&apos;m Johnny, a ChatBot of this application. How can I help you?'),
 (6, 'short_name', 'CRMS'),
 (10, 'no_result', 'I am sorry. I can&apos;t understand your question. Please rephrase your question and make sure it is related to this site. Thank you :)'),
@@ -152,7 +170,7 @@ CREATE TABLE `tickets` (
   `user_created` text DEFAULT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tickets`
@@ -160,7 +178,8 @@ CREATE TABLE `tickets` (
 
 INSERT INTO `tickets` (`id`, `title`, `description`, `status`, `service_id`, `user_id`, `user_created`, `date_created`, `date_updated`) VALUES
 (1, 'Sample Ticket 102', '<p style=\"margin-right: 0px; margin-bottom: 15px; margin-left: 0px; padding: 0px; text-align: justify; color: rgb(0, 0, 0); font-family: \"Open Sans\", Arial, sans-serif;\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat sem et porta sagittis. Cras interdum varius risus, quis tincidunt orci convallis quis. Sed eget orci augue. Pellentesque mollis blandit nibh, vitae dapibus diam fringilla sed. Integer elementum felis vel elit feugiat auctor. Nunc fermentum tincidunt enim, non dignissim turpis pharetra ac. Proin pellentesque commodo diam. Morbi sem risus, blandit in egestas eget, suscipit quis tellus. Aenean varius quis turpis eu maximus. Nam feugiat sollicitudin ex. Etiam mollis ultricies turpis, a faucibus neque laoreet non. Integer et magna ultrices, faucibus felis quis, blandit quam.</p><p style=\"margin-right: 0px; margin-bottom: 15px; margin-left: 0px; padding: 0px; text-align: justify; color: rgb(0, 0, 0); font-family: \"Open Sans\", Arial, sans-serif;\">Morbi tincidunt malesuada ullamcorper. Nam blandit eros sit amet gravida mollis. Etiam ullamcorper magna et enim tempor bibendum. In mollis lectus non tellus euismod imperdiet. Duis nec vestibulum leo. Vivamus vel metus mattis, fringilla erat in, blandit risus. Fusce dolor ligula, consequat vel varius vel, cursus nec nibh. Integer vel condimentum lorem. Aliquam tincidunt aliquam eros eu tincidunt.</p>', 2, 2, '-1', 'developer', '2021-05-10 13:59:54', '2021-05-10 21:55:55'),
-(4, 'Sample 103', '<p>Sample only</p>', 0, 3, '1', 'user', '2021-05-10 23:38:52', '2021-05-10 23:38:52');
+(4, 'Sample 103', '<p>Sample only</p>', 0, 3, '1', 'user', '2021-05-10 23:38:52', '2021-05-10 23:38:52'),
+(5, 'yghhiguy', '<p>ughguyg</p>', 2, 4, '2', 'user', '2024-10-04 00:32:29', '2024-10-04 00:53:56');
 
 -- --------------------------------------------------------
 
@@ -175,7 +194,7 @@ CREATE TABLE `ticket_comment` (
   `user_id` varchar(30) NOT NULL,
   `user_created` varchar(50) NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ticket_comment`
@@ -203,7 +222,7 @@ CREATE TABLE `users` (
   `last_login` datetime DEFAULT NULL,
   `date_added` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
@@ -221,6 +240,12 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `password`, `ava
 -- Indexes for table `customers`
 --
 ALTER TABLE `customers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `events`
+--
+ALTER TABLE `events`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -273,13 +298,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `events`
+--
+ALTER TABLE `events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `quote`
 --
 ALTER TABLE `quote`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `services`
@@ -303,7 +334,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `tickets`
 --
 ALTER TABLE `tickets`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `ticket_comment`
