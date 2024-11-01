@@ -265,7 +265,7 @@ function updateEvents(date) {
         </div>`;
   }
   eventsContainer.innerHTML = events;
-  saveEvents();
+  saveEvent();
 }
 
 //function to add event
@@ -430,19 +430,57 @@ eventsContainer.addEventListener("click", (e) => {
   }
 });
 
-//function to save events in local storage
-function saveEvents() {
-  localStorage.setItem("events", JSON.stringify(eventsArr));
+async function saveEvent(event) {
+  try {
+    const response = await fetch("saveEvent.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userid: userID,
+        event_date: `${year}-${String(month + 1).padStart(2, '0')}-${String(activeDay).padStart(2, '0')}`,
+        event_time_from: event.time.split(" - ")[0],
+        event_time_to: event.time.split(" - ")[1],
+        title: event.title
+      })
+    });
+    if (!response.ok) {
+      throw new Error("Failed to save event.");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
-//function to get events from local storage
-function getEvents() {
-  //check if events are already saved in local storage then return event else nothing
-  if (localStorage.getItem("events") === null) {
-    return;
+async function getEvents() {
+  try {
+    const response = await fetch("getEvents.php?userid=" + userID);
+    if (!response.ok) {
+      throw new Error("Failed to retrieve events.");
+    }
+    const events = await response.json();
+    eventsArr.push(...events.map(event => ({
+      day: new Date(event.event_date).getDate(),
+      month: new Date(event.event_date).getMonth() + 1,
+      year: new Date(event.event_date).getFullYear(),
+      events: [{
+        title: event.title,
+        time: `${event.event_time_from} - ${event.event_time_to}`
+      }]
+    })));
+  } catch (error) {
+    console.error("Error:", error);
   }
-  eventsArr.push(...JSON.parse(localStorage.getItem("events")));
 }
+    day: new Date(event.event_date).getDate(),
+    month: new Date(event.event_date).getMonth() + 1,
+    year: new Date(event.event_date).getFullYear(),
+    events: [{
+      title: event.title,
+      time: `${event.event_time_from} - ${event.event_time_to}`
+    }]
+  })));
+}
+
 
 function convertTime(time) {
   //convert time to 24 hour format
