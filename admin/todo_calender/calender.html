@@ -15,6 +15,10 @@ The injected HTML structure includes:
 - A button to trigger the event addition interface.
 -->
 <script>
+    const userID = <?php echo json_encode($_SESSION['userdata']['user_id']); ?>; // Assuming the user ID is in session
+</script>
+  
+<script>
     window.onload = function () {
         // Get the first element with the class 'content' (adjust this to match your actual structure)
         var content = document.getElementsByClassName("container-fluid")[0];

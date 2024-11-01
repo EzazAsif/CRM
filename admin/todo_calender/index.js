@@ -431,57 +431,34 @@ eventsContainer.addEventListener("click", (e) => {
 });
 
 async function saveEvent(event) {
-  try {
-    const response = await fetch("saveEvent.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userid: userID,
-        event_date: `${year}-${String(month + 1).padStart(2, '0')}-${String(activeDay).padStart(2, '0')}`,
-        event_time_from: event.time.split(" - ")[0],
-        event_time_to: event.time.split(" - ")[1],
-        title: event.title
-      })
-    });
-    if (!response.ok) {
-      throw new Error("Failed to save event.");
-    }
-  } catch (error) {
-    console.error("Error:", error);
-  }
+  await fetch("saveEvent.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userid: userID, // Using the actual user ID
+      event_date: `${year}-${String(month + 1).padStart(2, '0')}-${String(activeDay).padStart(2, '0')}`,
+      event_time_from: event.time.split(" - ")[0],
+      event_time_to: event.time.split(" - ")[1],
+      title: event.title
+    })
+  });
 }
 
 async function getEvents() {
-  try {
-    const response = await fetch("getEvents.php?userid=" + userID);
-    if (!response.ok) {
-      throw new Error("Failed to retrieve events.");
-    }
-    const events = await response.json();
-    eventsArr.push(...events.map(event => ({
-      day: new Date(event.event_date).getDate(),
-      month: new Date(event.event_date).getMonth() + 1,
-      year: new Date(event.event_date).getFullYear(),
-      events: [{
-        title: event.title,
-        time: `${event.event_time_from} - ${event.event_time_to}`
-      }]
-    })));
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
+  const response = await fetch("getEvents.php?userid=" + userID); // Pass the actual user ID
+  const events = await response.json();
+  eventsArr.push(...events.map(event => ({
     day: new Date(event.event_date).getDate(),
     month: new Date(event.event_date).getMonth() + 1,
     year: new Date(event.event_date).getFullYear(),
     events: [{
       title: event.title,
-      time: `${event.event_time_from} - ${event.event_time_to}`
+      time: `${event.event_time_from} - ${event.event_time_to}` // Use template literal
     }]
   })));
 }
 
-
+ 
 function convertTime(time) {
   //convert time to 24 hour format
   let timeArr = time.split(":");
