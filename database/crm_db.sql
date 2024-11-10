@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2024 at 08:35 PM
+-- Generation Time: Nov 10, 2024 at 04:22 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `crm_db`
+-- Database: `crm_db1`
 --
 
 -- --------------------------------------------------------
@@ -44,9 +44,8 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`id`, `firstname`, `lastname`, `username`, `password`, `avatar`, `last_login`, `date_added`, `date_updated`) VALUES
-(1, 'John', 'Smith', 'jsmith@sample.com', '39ce7e2a8573b41ce73b5ba41617f8f7', NULL, NULL, '2021-05-10 23:23:35', NULL),
-(2, 'eZAZ', 'aSIF', 'Ezaz Asif', '57e290959274e7fc2f2b3a46ed35b50b', NULL, NULL, '2024-10-04 00:17:59', NULL),
-(3, 'Ezaz', 'Rafid', 'EzazAsif', '9c72446df124ddf214b698c1e2312371', NULL, NULL, '2024-10-04 14:57:23', NULL);
+(1, 'Alice', 'Wonder', 'alice@wonder.com', 'b2e98ad6f6eb8508dd6a14cfa704bad7', NULL, NULL, '2024-11-10 15:18:48', '2024-11-10 15:18:48'),
+(2, 'Bob', 'Builder', 'bob@builder.com', 'e2fc714c4727ee9395f324cd2e7f331f', NULL, NULL, '2024-11-10 15:18:48', '2024-11-10 15:18:48');
 
 -- --------------------------------------------------------
 
@@ -63,6 +62,14 @@ CREATE TABLE `events` (
   `title` varchar(60) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `events`
+--
+
+INSERT INTO `events` (`id`, `Userid`, `event_date`, `event_time_from`, `event_time_to`, `title`, `created_at`) VALUES
+(1, 1, '2024-11-01', '09:00:00', '10:00:00', 'Project Update', '2024-11-10 15:18:48'),
+(2, 2, '2024-11-05', '10:30:00', '11:30:00', 'Client Call', '2024-11-10 15:18:48');
 
 -- --------------------------------------------------------
 
@@ -82,8 +89,8 @@ CREATE TABLE `quote` (
 --
 
 INSERT INTO `quote` (`id`, `email`, `service_ids`, `date_created`) VALUES
-(1, 'jsmith@sample.com', '3,4,2', '2021-05-11 01:08:50'),
-(2, 'asifrafid8399@gmail.com', '3', '2024-10-30 15:09:59');
+(1, 'alice@wonder.com', '1,2', '2024-11-10 15:18:48'),
+(2, 'bob@builder.com', '2', '2024-11-10 15:18:48');
 
 -- --------------------------------------------------------
 
@@ -104,9 +111,8 @@ CREATE TABLE `services` (
 --
 
 INSERT INTO `services` (`id`, `category_id`, `service`, `description`, `img_path`) VALUES
-(1, 2, 'Service 102', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat sem et porta sagittis. Cras interdum varius risus, quis tincidunt orci convallis quis. Sed eget orci augue. Pellentesque mollis blandit nibh, vitae dapibus diam fringilla sed. Integer elementum felis vel elit feugiat auctor. Nunc fermentum tincidunt enim, non dignissim turpis pharetra ac. Proin pellentesque commodo diam. Morbi sem risus, blandit in egestas eget, suscipit quis tellus. Aenean varius quis turpis eu maximus. Nam feugiat sollicitudin ex. Etiam mollis ultricies turpis, a faucibus neque laoreet non. Integer et magna ultrices, faucibus felis quis, blandit quam.', 'uploads/services/2_img.jpg'),
-(2, 1, 'asdasd', 'asdasd', NULL),
-(3, 1, 'Test 101', 'Sample description for Test 101', NULL);
+(1, 1, 'Website Design', 'Responsive website design service', 'path/to/image1.jpg'),
+(2, 2, 'SEO', 'Search engine optimization services', 'path/to/image2.jpg');
 
 -- --------------------------------------------------------
 
@@ -125,8 +131,8 @@ CREATE TABLE `services_category` (
 --
 
 INSERT INTO `services_category` (`id`, `category`, `description`) VALUES
-(1, 'Sample Category', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat sem et porta sagittis. Cras interdum varius risus, quis tincidunt orci convallis quis. Sed eget orci augue. Pellentesque mollis blandit nibh, vitae dapibus diam fringilla sed. Integer elementum felis vel elit feugiat auctor. Nunc fermentum tincidunt enim, non dignissim turpis pharetra ac. Proin pellentesque commodo diam. Morbi sem risus, blandit in egestas eget, suscipit quis tellus. Aenean varius quis turpis eu maximus. Nam feugiat sollicitudin ex. Etiam mollis ultricies turpis, a faucibus neque laoreet non. Integer et magna ultrices, faucibus felis quis, blandit quam.'),
-(2, 'Sample Category 102', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat sem et porta sagittis. Cras interdum varius risus, quis tincidunt orci convallis quis. Sed eget orci augue. Pellentesque mollis blandit nibh, vitae dapibus diam fringilla sed. Integer elementum felis vel elit feugiat auctor. Nunc fermentum tincidunt enim, non dignissim turpis pharetra ac. Proin pellentesque commodo diam. Morbi sem risus, blandit in egestas eget, suscipit quis tellus. Aenean varius quis turpis eu maximus. Nam feugiat sollicitudin ex. Etiam mollis ultricies turpis, a faucibus neque laoreet non. Integer et magna ultrices, faucibus felis quis, blandit quam.');
+(1, 'Web Development', 'Custom web development services'),
+(2, 'Marketing', 'Digital marketing services');
 
 -- --------------------------------------------------------
 
@@ -140,6 +146,14 @@ CREATE TABLE `system_info` (
   `meta_value` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `system_info`
+--
+
+INSERT INTO `system_info` (`id`, `meta_field`, `meta_value`) VALUES
+(1, 'App Version', '1.0.0'),
+(2, 'Database Version', '1.0.0');
+
 -- --------------------------------------------------------
 
 --
@@ -152,7 +166,7 @@ CREATE TABLE `tickets` (
   `description` text DEFAULT NULL,
   `status` tinyint(5) NOT NULL DEFAULT 0,
   `service_id` int(30) NOT NULL,
-  `user_id` int(30) NOT NULL,
+  `customer_id` int(50) NOT NULL,
   `user_created` text DEFAULT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -162,8 +176,9 @@ CREATE TABLE `tickets` (
 -- Dumping data for table `tickets`
 --
 
-INSERT INTO `tickets` (`id`, `title`, `description`, `status`, `service_id`, `user_id`, `user_created`, `date_created`, `date_updated`) VALUES
-(1, 'Sample Ticket 1', 'This is a sample ticket.', 0, 1, 1, 'Ezaz Asif', '2024-10-30 15:09:59', '2024-10-30 15:09:59');
+INSERT INTO `tickets` (`id`, `title`, `description`, `status`, `service_id`, `customer_id`, `user_created`, `date_created`, `date_updated`) VALUES
+(1, 'System Error', 'Error occurred during update', 1, 1, 1, 'Alice Wonder', '2024-11-10 15:18:48', '2024-11-10 15:18:48'),
+(2, 'Feature Request', 'Request for new feature in dashboard', 0, 2, 2, 'Bob Builder', '2024-11-10 15:18:48', '2024-11-10 15:18:48');
 
 -- --------------------------------------------------------
 
@@ -175,7 +190,7 @@ CREATE TABLE `ticket_comment` (
   `id` int(30) NOT NULL,
   `ticket_id` int(30) NOT NULL,
   `comment` text DEFAULT NULL,
-  `user_id` int(30) NOT NULL,
+  `customer_id` int(50) NOT NULL,
   `user_created` varchar(50) NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -184,8 +199,35 @@ CREATE TABLE `ticket_comment` (
 -- Dumping data for table `ticket_comment`
 --
 
-INSERT INTO `ticket_comment` (`id`, `ticket_id`, `comment`, `user_id`, `user_created`, `date_created`) VALUES
-(1, 1, 'First ticket comment', 2, 'Ezaz Asif', '2024-10-30 15:09:59');
+INSERT INTO `ticket_comment` (`id`, `ticket_id`, `comment`, `customer_id`, `user_created`, `date_created`) VALUES
+(1, 1, 'Investigating the issue.', 1, 'Alice Wonder', '2024-11-10 15:18:49'),
+(2, 2, 'Feature request has been noted.', 2, 'Bob Builder', '2024-11-10 15:18:49');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(50) NOT NULL,
+  `firstname` varchar(250) NOT NULL,
+  `lastname` varchar(250) NOT NULL,
+  `username` text NOT NULL,
+  `password` text NOT NULL,
+  `avatar` text DEFAULT NULL,
+  `last_login` datetime DEFAULT NULL,
+  `date_added` datetime NOT NULL DEFAULT current_timestamp(),
+  `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `password`, `avatar`, `last_login`, `date_added`, `date_updated`) VALUES
+(1, 'John', 'Doe', 'johndoe', 'e99a18c428cb38d5f260853678922e03', NULL, NULL, '2024-11-10 15:18:48', '2024-11-10 15:18:48'),
+(2, 'Jane', 'Smith', 'janesmith', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, NULL, '2024-11-10 15:18:48', '2024-11-10 15:18:48');
 
 --
 -- Indexes for dumped tables
@@ -235,7 +277,7 @@ ALTER TABLE `system_info`
 ALTER TABLE `tickets`
   ADD PRIMARY KEY (`id`),
   ADD KEY `service_id` (`service_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `customer_id` (`customer_id`);
 
 --
 -- Indexes for table `ticket_comment`
@@ -243,7 +285,13 @@ ALTER TABLE `tickets`
 ALTER TABLE `ticket_comment`
   ADD PRIMARY KEY (`id`),
   ADD KEY `ticket_id` (`ticket_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `customer_id` (`customer_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -253,13 +301,13 @@ ALTER TABLE `ticket_comment`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `quote`
@@ -271,7 +319,7 @@ ALTER TABLE `quote`
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `services_category`
@@ -283,19 +331,25 @@ ALTER TABLE `services_category`
 -- AUTO_INCREMENT for table `system_info`
 --
 ALTER TABLE `system_info`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tickets`
 --
 ALTER TABLE `tickets`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `ticket_comment`
 --
 ALTER TABLE `ticket_comment`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -305,27 +359,27 @@ ALTER TABLE `ticket_comment`
 -- Constraints for table `events`
 --
 ALTER TABLE `events`
-  ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`Userid`) REFERENCES `customers` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`Userid`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `services`
 --
 ALTER TABLE `services`
-  ADD CONSTRAINT `services_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `services_category` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `services_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `services_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tickets`
 --
 ALTER TABLE `tickets`
-  ADD CONSTRAINT `tickets_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `tickets_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `tickets_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `tickets_ibfk_2` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `ticket_comment`
 --
 ALTER TABLE `ticket_comment`
-  ADD CONSTRAINT `ticket_comment_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `ticket_comment_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `ticket_comment_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ticket_comment_ibfk_2` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
