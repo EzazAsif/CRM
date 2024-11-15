@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 10, 2024 at 04:22 PM
+-- Generation Time: Nov 15, 2024 at 10:01 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `crm_db1`
+-- Database: `crm_db`
 --
 
 -- --------------------------------------------------------
@@ -45,7 +45,8 @@ CREATE TABLE `customers` (
 
 INSERT INTO `customers` (`id`, `firstname`, `lastname`, `username`, `password`, `avatar`, `last_login`, `date_added`, `date_updated`) VALUES
 (1, 'Alice', 'Wonder', 'alice@wonder.com', 'b2e98ad6f6eb8508dd6a14cfa704bad7', NULL, NULL, '2024-11-10 15:18:48', '2024-11-10 15:18:48'),
-(2, 'Bob', 'Builder', 'bob@builder.com', 'e2fc714c4727ee9395f324cd2e7f331f', NULL, NULL, '2024-11-10 15:18:48', '2024-11-10 15:18:48');
+(2, 'Bob', 'Builder', 'bob@builder.com', 'e2fc714c4727ee9395f324cd2e7f331f', NULL, NULL, '2024-11-10 15:18:48', '2024-11-10 15:18:48'),
+(3, 'Ezaz', 'Rafid', 'Ezaz', '9c72446df124ddf214b698c1e2312371', NULL, NULL, '2024-11-11 17:25:06', NULL);
 
 -- --------------------------------------------------------
 
@@ -227,7 +228,11 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `password`, `avatar`, `last_login`, `date_added`, `date_updated`) VALUES
 (1, 'John', 'Doe', 'johndoe', 'e99a18c428cb38d5f260853678922e03', NULL, NULL, '2024-11-10 15:18:48', '2024-11-10 15:18:48'),
-(2, 'Jane', 'Smith', 'janesmith', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, NULL, '2024-11-10 15:18:48', '2024-11-10 15:18:48');
+(2, 'Jane', 'Smith', 'janesmith', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, NULL, '2024-11-10 15:18:48', '2024-11-10 15:18:48'),
+(3, 'Ezaz', 'Asif', 'Admin', 'admin123', NULL, NULL, '2024-11-11 17:26:52', NULL),
+(4, 'Ezaz', 'Asif', 'Admin', 'admin123', NULL, NULL, '2024-11-11 17:27:26', NULL),
+(6, 'Adminstrator', 'Admin', 'admin', '0192023a7bbd73250516f069df18b500', 'uploads/1620656340_1605601740_download.jpg', NULL, '2021-01-20 14:02:37', '2021-05-10 22:19:01'),
+(7, 'admin', 'admin1', 'admin1', 'e00cf25ad42683b3df678c61f42c6bda', NULL, NULL, '2021-05-10 22:38:34', NULL);
 
 --
 -- Indexes for dumped tables
@@ -301,7 +306,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `events`
@@ -349,7 +354,7 @@ ALTER TABLE `ticket_comment`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
