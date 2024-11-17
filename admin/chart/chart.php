@@ -1,4 +1,4 @@
-<?php?
+<?php
 /**
  * 
  * This file contains the HTML and JavaScript code to render various charts for analytics and reporting
@@ -29,7 +29,7 @@
  * - Bootstrap JS (https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js)
  */
 
->
+?>
 <div class="container mt-5">
     <h2 class="text-center">Analytics and Reporting</h2>
     <div class="row mt-4">
