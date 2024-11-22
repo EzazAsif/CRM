@@ -1,369 +1,361 @@
 <?php
 require_once('../config.php');
-Class Master extends DBConnection {
-	private $settings;
-	public function __construct(){
-		global $_settings;
-		$this->settings = $_settings;
-		parent::__construct();
-	}
-	public function __destruct(){
-		parent::__destruct();
-	}
-	public function load_service_category(){
-		
-		$qry = $this->conn->query("SELECT * FROM `services_category` order by `category` asc");
-		$data = array();
-			while($row = $qry->fetch_assoc()){
-				$row['description'] = strip_tags(stripslashes($row['description']));
-				
-				$data[] = $row;
-			}	
-			$resp['status']='success';
-			$resp['data'] = $data;
-			return json_encode($resp);
-	}
-	public function load_service(){
-		
-		$qry = $this->conn->query("SELECT s.*,c.category FROM `services` s inner join `services_category` c on c.id = s.category_id order by s.`service` asc");
-		$data = array();
-			while($row = $qry->fetch_assoc()){
-				$row['description'] = strip_tags(stripslashes($row['description']));
-				$row['img_path'] = validate_image($row['img_path']);
-				$data[] = $row;
-			}	
-			$resp['status']='success';
-			$resp['data'] = $data;
-			return json_encode($resp);
-	}
-	public function load_tickets(){
-		extract($_POST);
-		$qry = $this->conn->query("SELECT t.*,s.service,c.category FROM `tickets` t inner join `services` s on t.service_id = s.id inner join `services_category` c on c.id = s.category_id ".($this->settings->userdata('login_type') != 1 ? " where t.user_id = '".$this->settings->userdata('id')."' and t.user_created ='user' " : "")." order by date(date_created) desc");
-		$data = array();
-			while($row = $qry->fetch_assoc()){
-				$row['description'] = strip_tags(stripslashes($row['description']));
-				if($row['user_id'] > 0){
-					if($row['user_created'] == 'admin'){
-						$user= $this->conn->query("SELECT * FROM users where id =".$row['user_id']);
-						if($user->num_rows > 0)
-							$row['user_avatar'] = validate_image($user->fetch_array()['avatar']);
-					}else{
-						$user= $this->conn->query("SELECT * FROM customers where id =".$row['user_id']);
-						if($user->num_rows > 0)
-							$row['user_avatar'] = validate_image($user->fetch_array()['avatar']);
-					}
-				}
-				$row['date_created'] = date("Y-m-d h:i A",strtotime($row['date_created']));
-				switch ($row['status']) {
-					case 1:
-						$row['status'] ='On-Going';
-						$row['status_badge'] ='badge-info';
-						break;
-					case 2:
-						$row['status'] ='Closed';
-						$row['status_badge'] ='badge-success';
-						break;
-					default:
-						$row['status'] ='Pending';
-						$row['status_badge'] ='badge-dark';
-						break;
-				}
-				if(empty($search))
-				$data[] = $row;
-				elseif(strstr(strtolower($row['title']),strtolower($search)) || strstr(strtolower($row['description']),strtolower($search)))
-				$data[] = $row;
-				 
-			}	
+class Master extends DBConnection {
+    private $settings;
+    private $memcache;
+    
+    public function __construct() {
+        global $_settings;
+        $this->settings = $_settings;
+        
+        // Initialize Memcache
+        $this->memcache = new Memcached();
+        $this->memcache->addServer('localhost', 3306);  // Adjust the server and port if needed
+        
+        parent::__construct();
+    }
+    
+    public function __destruct() {
+        parent::__destruct();
+    }
+    
+    // Load service categories with Memcached
+    public function load_service_category() {
+        $cache_key = "service_categories";
+        $data = $this->memcache->get($cache_key);
+        
+        if ($data === false) {
+            $qry = $this->conn->query("SELECT * FROM services_category ORDER BY category ASC");
+            $data = array();
+            while ($row = $qry->fetch_assoc()) {
+                $row['description'] = strip_tags(stripslashes($row['description']));
+                $data[] = $row;
+            }
+            $this->memcache->set($cache_key, $data, 3600);  // Cache for 1 hour
+        }
+        
+        $resp['status'] = 'success';
+        $resp['data'] = $data;
+        return json_encode($resp);
+    }
 
-			$resp['status']='success';
-			$resp['data'] = $data;
-			return json_encode($resp);
+    // Load services with Memcached
+    public function load_service() {
+        $cache_key = "services";
+        $data = $this->memcache->get($cache_key);
+        
+        if ($data === false) {
+            $qry = $this->conn->query("SELECT s.*, c.category FROM services s 
+                                       INNER JOIN services_category c ON c.id = s.category_id 
+                                       ORDER BY s.service ASC");
+            $data = array();
+            while ($row = $qry->fetch_assoc()) {
+                $row['description'] = strip_tags(stripslashes($row['description']));
+                $row['img_path'] = validate_image($row['img_path']);
+                $data[] = $row;
+            }
+            $this->memcache->set($cache_key, $data, 3600);  // Cache for 1 hour
+        }
+        
+        $resp['status'] = 'success';
+        $resp['data'] = $data;
+        return json_encode($resp);
+    }
 
-	}
-	public function load_comments(){
-		extract($_POST);
-		$qry = $this->conn->query("SELECT * FROM `ticket_comment` where ticket_id = {$id} order by date(date_created) desc");
-		$data = array();
-			while($row = $qry->fetch_assoc()){
-				$row['comment'] = strip_tags(stripslashes($row['comment']));
-				$row['user_name'] = "Developer";
-				$row['login_type'] = 1;
-				if($row['user_id'] > 0){
-					if($row['user_created'] == 'admin'){
-						$user= $this->conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where id =".$row['user_id']);
-						if($user->num_rows > 0){
-							$res =$user->fetch_array();
-							$row['user_avatar'] = validate_image($res['avatar']);
-							$row['user_name'] = ucwords($res['name']);
-						}
-							
-					}else{
-						$user= $this->conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM customers where id =".$row['user_id']);
-						if($user->num_rows > 0){
-							$res =$user->fetch_array();
-							$row['user_avatar'] = validate_image($res['avatar']);
-							$row['user_name'] = ucwords($res['name']);
-							$row['login_type'] = 2;
-						}
-				}
-				}
-				$row['date_created'] = date("Y-m-d h:i A",strtotime($row['date_created']));
-				$data[] = $row;
-			}	
+    // Load tickets with Memcached
+    public function load_tickets() {
+        extract($_POST);
+        $cache_key = "tickets_" . md5($search);
+        $data = $this->memcache->get($cache_key);
+        
+        if ($data === false) {
+            $stmt = $this->conn->prepare("SELECT t.*, s.service, c.category FROM tickets t 
+                                          INNER JOIN services s ON t.service_id = s.id 
+                                          INNER JOIN services_category c ON c.id = s.category_id 
+                                          WHERE t.user_id = ? AND t.user_created = 'user' 
+                                          ORDER BY date(date_created) DESC");
+            $stmt->bind_param('i', $this->settings->userdata('id'));
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $data = array();
+            while ($row = $result->fetch_assoc()) {
+                $row['description'] = strip_tags(stripslashes($row['description']));
+                $data[] = $row;
+            }
+            $this->memcache->set($cache_key, $data, 3600);  // Cache for 1 hour
+        }
+        
+        $resp['status'] = 'success';
+        $resp['data'] = $data;
+        return json_encode($resp);
+    }
 
-			$resp['status']='success';
-			$resp['data'] = $data;
-			return json_encode($resp);
+    // Load comments for a specific ticket with Memcached
+    public function load_comments() {
+        extract($_POST);
+        $cache_key = "comments_ticket_{$id}";
+        $data = $this->memcache->get($cache_key);
+        
+        if ($data === false) {
+            $stmt = $this->conn->prepare("SELECT * FROM ticket_comment WHERE ticket_id = ? ORDER BY date(date_created) DESC");
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $data = array();
+            while ($row = $result->fetch_assoc()) {
+                $row['comment'] = strip_tags(stripslashes($row['comment']));
+                $data[] = $row;
+            }
+            $this->memcache->set($cache_key, $data, 3600);  // Cache for 1 hour
+        }
+        
+        $resp['status'] = 'success';
+        $resp['data'] = $data;
+        return json_encode($resp);
+    }
 
-	}
-	function save_category(){
-		extract($_POST);
-		$data = "";
-		foreach($_POST as $k => $v){
-			if(!in_array($k, array('id'))){
-				if($k == 'description') $v = addslashes($v);
-				if(!empty($data)) $data .= " , ";
-				$data .= " {$k} = '{$v}' ";
-			}
-		}
-		$chk = $this->conn->query("SELECT * FROM `services_category` where category = '{$category}' ".(!empty($id) ? " and id != {$id}" : ""));
-		if($chk->num_rows > 0){
-			$resp['status'] = 'duplicate';
-		}
-		if(empty($id)){
-			$sql = "INSERT INTO `services_category` set $data ";
-		}else{
-			$sql = "UPDATE `services_category` set $data where id = {$id}";
-		}
-		$save = $this->conn->query($sql);
-		if($save){
-			$resp['status'] = 'success';
-		}else{
-			$resp['error'] = 'error';
-			$resp['data'] = $sql;
-		}
-		return json_encode($resp);
+    // Save category data with Memcached invalidation
+    public function save_category() {
+        extract($_POST);
+        $data = "";
+        foreach ($_POST as $k => $v) {
+            if (!in_array($k, array('id'))) {
+                if ($k == 'description') $v = addslashes($v);
+                if (!empty($data)) $data .= " , ";
+                $data .= " {$k} = '{$v}' ";
+            }
+        }
+        $stmt = $this->conn->prepare("SELECT * FROM services_category WHERE category = ? AND id != ?");
+        $stmt->bind_param('si', $category, $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $resp['status'] = 'duplicate';
+        } else {
+            if (empty($id)) {
+                $stmt = $this->conn->prepare("INSERT INTO services_category SET $data");
+            } else {
+                $stmt = $this->conn->prepare("UPDATE services_category SET $data WHERE id = ?");
+                $stmt->bind_param('i', $id);
+            }
+            $stmt->execute();
+            $this->memcache->delete("service_categories");  // Invalidate cache
+            $resp['status'] = 'success';
+        }
+        return json_encode($resp);
+    }
 
-	}
-	function delete_service_category(){
-		extract($_POST);
-		$delete = $this->conn->query("DELETE FROM `services_category` where id ='$id' ");
-		$delete2 = $this->conn->query("DELETE FROM `services` where category_id ='$id' ");
-		if($delete && $delete2){
-			$resp['status'] = 'success';
-		}else{
-			$resp['status'] = 'error';
-			$resp['error'] = $this->conn->error;
-		}
-		return json_encode($resp);
-	}
-	function save_service(){
-		extract($_POST);
-		$data = "";
-		foreach($_POST as $k => $v){
-			if(!in_array($k, array('id'))){
-				if($k == 'description') $v = addslashes($v);
-				if(!empty($data)) $data .= " , ";
-				$data .= " {$k} = '{$v}' ";
-			}
-		}
-		$chk = $this->conn->query("SELECT * FROM `services` where service = '{$service}' ".(!empty($id) ? " and id != {$id}" : "")) or die($this->conn->error);
-		if($chk->num_rows > 0){
-			$resp['status'] = 'duplicate';
-		}
+    // Delete a service category with Memcached invalidation
+    public function delete_service_category() {
+        extract($_POST);
+        $stmt = $this->conn->prepare("DELETE FROM services_category WHERE id = ?");
+        $stmt->bind_param('i', $id);
+        $delete = $stmt->execute();
+        $delete2 = $this->conn->query("DELETE FROM services WHERE category_id = $id");
+        if ($delete && $delete2) {
+            $this->memcache->delete("service_categories");  // Invalidate cache
+            $resp['status'] = 'success';
+        } else {
+            $resp['status'] = 'error';
+            $resp['error'] = $this->conn->error;
+        }
+        return json_encode($resp);
+    }
 
-		if(empty($id)){
-			$sql = "INSERT INTO `services` set $data ";
-		}else{
-			$sql = "UPDATE `services` set $data where id = {$id}";
-		}
-		$save = $this->conn->query($sql);
-		if($save){
-			$resp['status'] = 'success';
-			$id= !empty($id) ? $id : $this->conn->insert_id;
-			if(!is_dir(base_app.'uploads/services')) mkdir(base_app.'uploads/services');
-			if(!empty($_FILES['img']['tmp_name'])){
-				$file = pathinfo($_FILES["img"]["name"]);
-				$fname = $id.'_img.'.($file['extension']);
-				if(is_file(base_app.'uploads/services/'.$fname)){
-					unlink(base_app.'uploads/services/'.$fname);
-				}
-				$move = move_uploaded_file($_FILES["img"]["tmp_name"], base_app.'uploads/services/'.$fname);
-				if($move){
-					$data = " img_path = 'uploads/services/{$fname}' ";
-					$this->conn->query("UPDATE `services` set {$data} where id = $id ");
-				}else{
-					var_dump($move);exit;
-				}
-			}
-		}else{
-			$resp['error'] = 'error';
-			$resp['data'] = $sql;
-		}
-		return json_encode($resp);
+    // Save service data with Memcached invalidation
+    public function save_service() {
+        extract($_POST);
+        $data = "";
+        foreach ($_POST as $k => $v) {
+            if (!in_array($k, array('id'))) {
+                if ($k == 'description') $v = addslashes($v);
+                if (!empty($data)) $data .= " , ";
+                $data .= " {$k} = '{$v}' ";
+            }
+        }
+        $stmt = $this->conn->prepare("SELECT * FROM services WHERE service = ? AND id != ?");
+        $stmt->bind_param('si', $service, $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $resp['status'] = 'duplicate';
+        } else {
+            if (empty($id)) {
+                $stmt = $this->conn->prepare("INSERT INTO services SET $data");
+            } else {
+                $stmt = $this->conn->prepare("UPDATE services SET $data WHERE id = ?");
+                $stmt->bind_param('i', $id);
+            }
+            $stmt->execute();
+            $this->memcache->delete("services");  // Invalidate cache
+            $resp['status'] = 'success';
+        }
+        return json_encode($resp);
+    }
 
-	}
-	function delete_service(){
-		extract($_POST);
-		$delete = $this->conn->query("DELETE FROM `services` where `id` ='$id' ");
-		if($delete){
-			$resp['status'] = 'success';
-		}else{
-			$resp['status'] = 'error';
-			$resp['error'] = $this->conn->error;
-		}
-		return json_encode($resp);
-	}
-	function delete_ticket(){
-		extract($_POST);
-		$delete = $this->conn->query("DELETE FROM `tickets` where `id` ='$id' ");
-		if($delete){
-			$resp['status'] = 'success';
-			$this->settings->set_flashdata('success',' Ticket Succesfully deleted');
-		}else{
-			$resp['status'] = 'error';
-			$resp['error'] = $this->conn->error;
-		}
-		return json_encode($resp);
-	}
-	function save_ticket(){
-		extract($_POST);
-		$data = "";
+    // Delete a service with Memcached invalidation
+    public function delete_service() {
+        extract($_POST);
+        $stmt = $this->conn->prepare("DELETE FROM services WHERE id = ?");
+        $stmt->bind_param('i', $id);
+        $delete = $stmt->execute();
+        if ($delete) {
+            $this->memcache->delete("services");  // Invalidate cache
+            $resp['status'] = 'success';
+        } else {
+            $resp['status'] = 'error';
+            $resp['error'] = $this->conn->error;
+        }
+        return json_encode($resp);
+    }
 
-		foreach($_POST as $k => $v){
-			if(!in_array($k, array('id'))){
-				if($k == 'description') $v = addslashes($v);
-				if(!empty($data)) $data .= " , ";
-				$data .= " {$k} = '{$v}' ";
-			}
-		}
-		$data .= ", user_id = '".$this->settings->userdata('id')."' ";
+    // Delete ticket
+    public function delete_ticket() {
+        extract($_POST);
+        $stmt = $this->conn->prepare("DELETE FROM tickets WHERE id = ?");
+        $stmt->bind_param('i', $id);
+        $delete = $stmt->execute();
+        if ($delete) {
+            $resp['status'] = 'success';
+        } else {
+            $resp['status'] = 'error';
+            $resp['error'] = $this->conn->error;
+        }
+        return json_encode($resp);
+    }
 
-		if($this->settings->userdata('id') == -1){
-				$data .= ", user_created = 'developer' ";
-		}else if($this->settings->userdata('login_type') == 1 ){
-				$data .= ", user_created = 'admin' ";
-		}else{
-				$data .= ", user_created = 'user' ";
-		}
+    // Save ticket
+    public function save_ticket() {
+        extract($_POST);
+        $data = "";
+        foreach ($_POST as $k => $v) {
+            if (!in_array($k, array('id'))) {
+                if ($k == 'description') $v = addslashes($v);
+                if (!empty($data)) $data .= " , ";
+                $data .= " {$k} = '{$v}' ";
+            }
+        }
+        $stmt = $this->conn->prepare("SELECT * FROM tickets WHERE ticket_number = ? AND id != ?");
+        $stmt->bind_param('si', $ticket_number, $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $resp['status'] = 'duplicate';
+        } else {
+            if (empty($id)) {
+                $stmt = $this->conn->prepare("INSERT INTO tickets SET $data");
+            } else {
+                $stmt = $this->conn->prepare("UPDATE tickets SET $data WHERE id = ?");
+                $stmt->bind_param('i', $id);
+            }
+            $stmt->execute();
+            $resp['status'] = 'success';
+        }
+        return json_encode($resp);
+    }
 
-		if(empty($id)){
-			$sql = "INSERT INTO `tickets` set $data ";
-		}else{
-			$sql = "UPDATE `tickets` set $data where id = {$id}";
-		}
-		$save = $this->conn->query($sql);
-		if($save){
-			$resp['status'] = 'success';
-			$this->settings->set_flashdata('success',' Ticket successfully saved');
-		}else{
-			$resp['error'] = 'error';
-			$resp['data'] = $sql;
-		}
-		return json_encode($resp);
-	}
-	function save_comment(){
-		extract($_POST);
-		$comment = addslashes($comment);
+    // Save comment
+    public function save_comment() {
+        extract($_POST);
+        $data = "";
+        foreach ($_POST as $k => $v) {
+            if (!in_array($k, array('id'))) {
+                if ($k == 'comment') $v = addslashes($v);
+                if (!empty($data)) $data .= " , ";
+                $data .= " {$k} = '{$v}' ";
+            }
+        }
+        if (empty($id)) {
+            $stmt = $this->conn->prepare("INSERT INTO ticket_comment SET $data");
+        } else {
+            $stmt = $this->conn->prepare("UPDATE ticket_comment SET $data WHERE id = ?");
+            $stmt->bind_param('i', $id);
+        }
+        $stmt->execute();
+        $resp['status'] = 'success';
+        return json_encode($resp);
+    }
 
-		$data = " comment = '{$comment}'";
-		$data .= ", user_id = '".$this->settings->userdata('id')."' ";
+    // Delete comment
+    public function delete_comment() {
+        extract($_POST);
+        $stmt = $this->conn->prepare("DELETE FROM ticket_comment WHERE id = ?");
+        $stmt->bind_param('i', $id);
+        $delete = $stmt->execute();
+        if ($delete) {
+            $resp['status'] = 'success';
+        } else {
+            $resp['status'] = 'error';
+            $resp['error'] = $this->conn->error;
+        }
+        return json_encode($resp);
+    }
 
-		if($this->settings->userdata('id') == -1){
-				$data .= ", user_created = 'developer' ";
-		}else if($this->settings->userdata('login_type') == 1 ){
-				$data .= ", user_created = 'admin' ";
-		}else{
-				$data .= ", user_created = 'user' ";
-		}
-		$data .= ", ticket_id = '{$ticket_id}' ";
+    // Save quote
+    public function save_quote() {
+        extract($_POST);
+        $data = "";
+        foreach ($_POST as $k => $v) {
+            if (!in_array($k, array('id'))) {
+                if ($k == 'quote') $v = addslashes($v);
+                if (!empty($data)) $data .= " , ";
+                $data .= " {$k} = '{$v}' ";
+            }
+        }
+        if (empty($id)) {
+            $stmt = $this->conn->prepare("INSERT INTO ticket_quotes SET $data");
+        } else {
+            $stmt = $this->conn->prepare("UPDATE ticket_quotes SET $data WHERE id = ?");
+            $stmt->bind_param('i', $id);
+        }
+        $stmt->execute();
+        $resp['status'] = 'success';
+        return json_encode($resp);
+    }
 
-			$sql = "INSERT INTO `ticket_comment` set $data ";
-		$save = $this->conn->query($sql);
-		if($save){
-			$resp['status'] = 'success';
-			$this->settings->set_flashdata('success',' Comment Succesfully posted');
-		}else{
-			$resp['error'] = 'error';
-			$resp['data'] = $sql;
-		}
-		return json_encode($resp);
-	}
-	function delete_comment(){
-		extract($_POST);
-		$delete = $this->conn->query("DELETE FROM `ticket_comment` where `id` ='$id' ");
-		if($delete){
-			$resp['status'] = 'success';
-			$this->settings->set_flashdata('success',' Comment Succesfully deleted');
-		}else{
-			$resp['status'] = 'error';
-			$resp['error'] = $this->conn->error;
-		}
-		return json_encode($resp);
-	}
-	function save_quote(){
-		extract($_POST);
-		$data = " email = '$email' ";
-		$service_ids = implode(',',$service);
-		$data .= " , service_ids = '{$service_ids}' ";
-		$sql = "INSERT INTO `quote` set $data ";
-		if($this->conn->query($sql)){
-			$resp['status'] = 'success';
-			$this->settings->set_flashdata('success',' Request sent');
-		}else{
-			$resp['status'] = 'error';
-			$resp['error'] = $this->conn->error .' : '.$sql;
-		}
-		return json_encode($resp);
-	}
-	function load_quote(){
-		$qry = $this->conn->query("SELECT * from `quote` order by date(date_created) desc");
-		$data =array();
-		if($qry){
-			while($row = $qry->fetch_assoc()){
-				$services='';
-				$qry2 = $this->conn->query("SELECT * from `services` where id in ({$row['service_ids']}) ");
-				while($ser = $qry2->fetch_assoc()){
-					if(!empty($services)) $services .= ", ";
-					$services .= $ser['service'];
-				}
-				$row['services'] = $services;
-				$row['date_created'] = date('Y-m-d h:i A',strtotime($row['date_created']));
-				$data[] = $row;
-			}
-			$resp['status'] = 'success';
-			$resp['data'] = $data;
+    // Load quote
+    public function load_quote() {
+        extract($_POST);
+        $stmt = $this->conn->prepare("SELECT * FROM ticket_quotes WHERE ticket_id = ?");
+        $stmt->bind_param('i', $ticket_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            $row['quote'] = strip_tags(stripslashes($row['quote']));
+            $data[] = $row;
+        }
+        $resp['status'] = 'success';
+        $resp['data'] = $data;
+        return json_encode($resp);
+    }
 
-		}else{
-			$resp['status'] = 'error';
-			$resp['error'] = $this->conn->error .' : '.$sql;
-		}
-		return json_encode($resp);
-	}
-	function delete_quote(){
-		extract($_POST);
-		$delete = $this->conn->query("DELETE FROM `quote` where `id` ='$id' ");
-		if($delete){
-			$resp['status'] = 'success';
-		}else{
-			$resp['status'] = 'error';
-			$resp['error'] = $this->conn->error;
-		}
-		return json_encode($resp);
-	}
-	function ticket_update_status(){
-		extract($_POST);
-		$sql = "UPDATE `tickets` set status = {$status} where id = {$id}";
-		if($this->conn->query($sql)){
-			$resp['status'] = 'success';
-			$this->settings->set_flashdata('success',' Ticket\'s successfully updated.');
-		}else{
-			$resp['status'] = 'error';
-			$resp['sql'] = $sql;
-		}
-		return json_encode($resp);
-	}
+    // Delete quote
+    public function delete_quote() {
+        extract($_POST);
+        $stmt = $this->conn->prepare("DELETE FROM ticket_quotes WHERE id = ?");
+        $stmt->bind_param('i', $id);
+        $delete = $stmt->execute();
+        if ($delete) {
+            $resp['status'] = 'success';
+        } else {
+            $resp['status'] = 'error';
+            $resp['error'] = $this->conn->error;
+        }
+        return json_encode($resp);
+    }
+
+    // Update ticket status
+    public function ticket_update_status() {
+        extract($_POST);
+        $stmt = $this->conn->prepare("UPDATE tickets SET status = ? WHERE id = ?");
+        $stmt->bind_param('si', $status, $id);
+        $stmt->execute();
+        $resp['status'] = 'success';
+        return json_encode($resp);
+    }
 }
+
 
 $Master = new Master();
 $action = !isset($_GET['f']) ? 'none' : strtolower($_GET['f']);
