@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2024 at 02:21 PM
+-- Generation Time: Nov 30, 2024 at 04:21 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -46,7 +46,8 @@ CREATE TABLE `customers` (
 INSERT INTO `customers` (`id`, `firstname`, `lastname`, `username`, `password`, `avatar`, `last_login`, `date_added`, `date_updated`) VALUES
 (1, 'John', 'Smith', 'jsmith@sample.com', '39ce7e2a8573b41ce73b5ba41617f8f7', NULL, NULL, '2021-05-10 23:23:35', NULL),
 (2, 'eZAZ', 'aSIF', 'Ezaz Asif', '57e290959274e7fc2f2b3a46ed35b50b', NULL, NULL, '2024-10-04 00:17:59', NULL),
-(3, 'Ezaz', 'Rafid', 'EzazAsif', '9c72446df124ddf214b698c1e2312371', NULL, NULL, '2024-10-04 14:57:23', NULL);
+(3, 'Ezaz', 'Rafid', 'EzazAsif', '9c72446df124ddf214b698c1e2312371', NULL, NULL, '2024-10-04 14:57:23', NULL),
+(4, 'Ezaz', 'Rafid', 'Ezaz', '9c72446df124ddf214b698c1e2312371', NULL, NULL, '2024-11-30 20:56:15', NULL);
 
 -- --------------------------------------------------------
 
@@ -83,7 +84,14 @@ CREATE TABLE `quote` (
 
 INSERT INTO `quote` (`id`, `email`, `service_ids`, `date_created`) VALUES
 (1, 'jsmith@sample.com', '3,4,2', '2021-05-11 01:08:50'),
-(3, 'asifrafid8399@gmail.com', '3', '2024-10-30 15:09:59');
+(3, 'asifrafid8399@gmail.com', '3', '2024-10-30 15:09:59'),
+(1, 'jsmith@sample.com', '3,4,2', '2021-05-11 01:08:50'),
+(3, 'asifrafid8399@gmail.com', '3', '2024-10-30 15:09:59'),
+(1, 'jsmith@sample.com', '3,4,2', '2021-05-11 01:08:50'),
+(3, 'asifrafid8399@gmail.com', '3', '2024-10-30 15:09:59'),
+(0, 'asifrafid8399@gmail.com', '3', '2024-11-30 20:56:27'),
+(0, 'ishzaz.rafid@northsouth.edu', '4', '2024-11-30 20:56:34'),
+(0, 'admin@gmail.com', '6', '2024-11-30 20:56:39');
 
 -- --------------------------------------------------------
 
@@ -104,9 +112,10 @@ CREATE TABLE `services` (
 --
 
 INSERT INTO `services` (`id`, `category_id`, `service`, `description`, `img_path`) VALUES
-(2, 2, 'Service 102', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat sem et porta sagittis. Cras interdum varius risus, quis tincidunt orci convallis quis. Sed eget orci augue. Pellentesque mollis blandit nibh, vitae dapibus diam fringilla sed. Integer elementum felis vel elit feugiat auctor. Nunc fermentum tincidunt enim, non dignissim turpis pharetra ac. Proin pellentesque commodo diam. Morbi sem risus, blandit in egestas eget, suscipit quis tellus. Aenean varius quis turpis eu maximus. Nam feugiat sollicitudin ex. Etiam mollis ultricies turpis, a faucibus neque laoreet non. Integer et magna ultrices, faucibus felis quis, blandit quam.', 'uploads/services/2_img.jpg'),
 (3, 1, 'asdasd', 'asdasd', NULL),
-(4, 1, 'Test 101', 'Sample', NULL);
+(4, 1, 'Test 101', 'Sample', NULL),
+(5, 1, 'yguyg', 'iuh', NULL),
+(6, 2, 'knonjolm', 'ijubhiuj', NULL);
 
 -- --------------------------------------------------------
 
@@ -166,7 +175,7 @@ CREATE TABLE `tickets` (
   `description` text DEFAULT NULL,
   `status` tinyint(5) NOT NULL DEFAULT 0,
   `service_id` int(30) NOT NULL,
-  `user_id` varchar(30) NOT NULL,
+  `user_id` int(50) NOT NULL,
   `user_created` text DEFAULT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -177,9 +186,9 @@ CREATE TABLE `tickets` (
 --
 
 INSERT INTO `tickets` (`id`, `title`, `description`, `status`, `service_id`, `user_id`, `user_created`, `date_created`, `date_updated`) VALUES
-(1, 'Sample Ticket 102', '<p style=\"margin-right: 0px; margin-bottom: 15px; margin-left: 0px; padding: 0px; text-align: justify; color: rgb(0, 0, 0); font-family: \"Open Sans\", Arial, sans-serif;\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat sem et porta sagittis. Cras interdum varius risus, quis tincidunt orci convallis quis. Sed eget orci augue. Pellentesque mollis blandit nibh, vitae dapibus diam fringilla sed. Integer elementum felis vel elit feugiat auctor. Nunc fermentum tincidunt enim, non dignissim turpis pharetra ac. Proin pellentesque commodo diam. Morbi sem risus, blandit in egestas eget, suscipit quis tellus. Aenean varius quis turpis eu maximus. Nam feugiat sollicitudin ex. Etiam mollis ultricies turpis, a faucibus neque laoreet non. Integer et magna ultrices, faucibus felis quis, blandit quam.</p><p style=\"margin-right: 0px; margin-bottom: 15px; margin-left: 0px; padding: 0px; text-align: justify; color: rgb(0, 0, 0); font-family: \"Open Sans\", Arial, sans-serif;\">Morbi tincidunt malesuada ullamcorper. Nam blandit eros sit amet gravida mollis. Etiam ullamcorper magna et enim tempor bibendum. In mollis lectus non tellus euismod imperdiet. Duis nec vestibulum leo. Vivamus vel metus mattis, fringilla erat in, blandit risus. Fusce dolor ligula, consequat vel varius vel, cursus nec nibh. Integer vel condimentum lorem. Aliquam tincidunt aliquam eros eu tincidunt.</p>', 2, 2, '-1', 'developer', '2021-05-10 13:59:54', '2021-05-10 21:55:55'),
-(4, 'Sample 103', '<p>Sample only</p>', 0, 3, '1', 'user', '2021-05-10 23:38:52', '2021-05-10 23:38:52'),
-(5, 'yghhiguy', '<p>ughguyg</p>', 2, 4, '2', 'user', '2024-10-04 00:32:29', '2024-10-04 00:53:56');
+(4, 'Sample 103', '<p>Sample only</p>', 0, 3, 1, 'user', '2021-05-10 23:38:52', '2021-05-10 23:38:52'),
+(5, 'yghhiguy', '<p>ughguyg</p>', 1, 4, 2, 'user', '2024-10-04 00:32:29', '2024-11-30 20:57:51'),
+(6, 'hibhou', '<p>y7f678ykioh7tyf</p>', 0, 6, 4, 'user', '2024-11-30 20:56:48', '2024-11-30 20:56:48');
 
 -- --------------------------------------------------------
 
@@ -191,7 +200,7 @@ CREATE TABLE `ticket_comment` (
   `id` int(30) NOT NULL,
   `ticket_id` int(30) NOT NULL,
   `comment` text DEFAULT NULL,
-  `user_id` varchar(30) NOT NULL,
+  `user_id` int(50) NOT NULL,
   `user_created` varchar(50) NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -201,10 +210,8 @@ CREATE TABLE `ticket_comment` (
 --
 
 INSERT INTO `ticket_comment` (`id`, `ticket_id`, `comment`, `user_id`, `user_created`, `date_created`) VALUES
-(2, 1, 'Sample comment..', '-1', 'developer', '2021-05-10 16:36:21'),
-(4, 1, 'Sample', '-1', 'developer', '2021-05-10 21:55:34'),
-(5, 4, 'sample', '1', 'user', '2021-05-10 23:55:39'),
-(6, 4, 'test', '1', 'admin', '2021-05-11 00:02:06');
+(5, 4, 'sample', 1, 'user', '2021-05-10 23:55:39'),
+(6, 4, 'test', 1, 'admin', '2021-05-11 00:02:06');
 
 -- --------------------------------------------------------
 
@@ -246,19 +253,15 @@ ALTER TABLE `customers`
 -- Indexes for table `events`
 --
 ALTER TABLE `events`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `quote`
---
-ALTER TABLE `quote`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `Userid` (`Userid`);
 
 --
 -- Indexes for table `services`
 --
 ALTER TABLE `services`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `category_id` (`category_id`);
 
 --
 -- Indexes for table `services_category`
@@ -276,13 +279,17 @@ ALTER TABLE `system_info`
 -- Indexes for table `tickets`
 --
 ALTER TABLE `tickets`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `service_id` (`service_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `ticket_comment`
 --
 ALTER TABLE `ticket_comment`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ticket_id` (`ticket_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `users`
@@ -298,7 +305,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `events`
@@ -307,16 +314,10 @@ ALTER TABLE `events`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `quote`
---
-ALTER TABLE `quote`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `services_category`
@@ -334,7 +335,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `tickets`
 --
 ALTER TABLE `tickets`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `ticket_comment`
@@ -347,6 +348,36 @@ ALTER TABLE `ticket_comment`
 --
 ALTER TABLE `users`
   MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `events`
+--
+ALTER TABLE `events`
+  ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`Userid`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `services`
+--
+ALTER TABLE `services`
+  ADD CONSTRAINT `services_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `services_category` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tickets`
+--
+ALTER TABLE `tickets`
+  ADD CONSTRAINT `tickets_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `tickets_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `ticket_comment`
+--
+ALTER TABLE `ticket_comment`
+  ADD CONSTRAINT `ticket_comment_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `ticket_comment_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
